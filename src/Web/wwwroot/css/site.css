@@ -29,3 +29,24 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+table {
+  border:5px solid black;
+  height:75vh;
+  width:75vh;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+th, td {
+  width: 12.5%;
+  height: 12.5%;
+}
+
+th.b {
+  background-color: darkcyan;
+}
+
+th.w {
+  background-color:beige;
+}

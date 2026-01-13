@@ -4,7 +4,14 @@
     ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<table>
+    @for(int row = 0; row < 8; row++) {
+        <tr>
+        @for(int column = 0; column < 8; column++) {
+            var color = (row+column) % 2 == 0 ? "b" : "w"; // Switches between black and white squares
+            var id = ""+(char)(column+97)+(row+1); // converts column to letters, starting from a(97)
+            <th class = "@color" id="@id"></th>
+        }
+        </tr>
+    }
+</table>
