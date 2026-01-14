@@ -14,4 +14,23 @@ public class ChessDbContext : IdentityDbContext<User, IdentityRole<int>, int>
 
     }
 
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+
+        builder.Entity<Game>(entity =>
+        {
+            entity.HasKey(g => new { g.BlackId, g.WhiteId });
+
+            entity.HasOne(g => g.Black)
+                .WithMany(u => u.GamesAsBlack)
+                .HasForeignKey(g => g.BlackId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(g => g.White)
+                .WithMany(u => u.GamesAsWhite)
+                .HasForeignKey(g => g.WhiteId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+    }
 }
