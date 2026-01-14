@@ -5,5 +5,6 @@ using Microsoft.AspNetCore.Identity;
 
 public class User : IdentityUser<int>
 {
-    ICollection<Game> Games {get; set;} = new Collection<Game>();
+    public ICollection<Game> GamesAsBlack {get; set;} = new Collection<Game>();
+    public ICollection<Game> GamesAsWhite {get; set;} = new Collection<Game>();
 }
