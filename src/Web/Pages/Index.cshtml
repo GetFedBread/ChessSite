@@ -3,50 +3,10 @@
 @{
     ViewData["Title"] = "Home page";
 }
+@using Web.Pages
+@await Html.PartialAsync("_Chessboard",
+    new ChessboardViewModel
+    {
+        ViewingFromWhite = Model.ViewingFromWhite
+    })
 
-<table id = "Chessboard">
-    @for(int row = 0; row < 8; row++) {
-        // Used to flip the board when viewing from blacks perspective
-        var boardRow = Model.ViewingFromWhite ? 8 - row : row + 1;
-        
-        <tr>
-            <th>@boardRow</th>
-        @for(int column = 0; column < 8; column++) {
-            // Used to flip the board when viewing from blacks perspective
-            var boardColumn = Model.ViewingFromWhite ? column : 7 - column;
-
-            // Switches between black and white squares
-            var color = (row+column) % 2 == 1 ? "b" : "w";
-            // converts column to letters, starting from a(97)
-            var id = ""+(char)(boardColumn+97)+boardRow;
-            <th class = "@color" id="@id"></th>
-        }
-        </tr>
-    }
-    @if(Model.ViewingFromWhite) {
-        <tr>
-            <th></th>
-            <th>a</th>
-            <th>b</th>
-            <th>c</th>
-            <th>d</th>
-            <th>e</th>
-            <th>f</th>
-            <th>g</th>
-            <th>h</th>
-        </tr>
-    } else {
-        <tr>
-            <th></th>
-            <th>h</th>
-            <th>g</th>
-            <th>f</th>
-            <th>e</th>
-            <th>d</th>
-            <th>c</th>
-            <th>b</th>
-            <th>a</th>
-        </tr>
-    }
-    
-</table>
