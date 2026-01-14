@@ -41,12 +41,6 @@ table {
 
 th {
   text-align: center;
-  padding: .5em;
-}
-
-td {
-  width: 2em; 
-  height: 2em;
 }
 
 th.b {

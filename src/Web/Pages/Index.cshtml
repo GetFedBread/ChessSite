@@ -4,7 +4,7 @@
     ViewData["Title"] = "Home page";
 }
 
-<table>
+<table id = "Chessboard">
     @for(int row = 0; row < 8; row++) {
         // Used to flip the board when viewing from blacks perspective
         var boardRow = Model.ViewingFromWhite ? 8 - row : row + 1;
