@@ -1,7 +1,19 @@
 @page "/users"
 @using Microsoft.EntityFrameworkCore.Metadata.Internal
 @model UsersModel
-
+@{
+    int currentPage = 1;
+    var pageQuery = Model.HttpContext.Request.Query["pageNum"];
+    if (!string.IsNullOrEmpty(pageQuery))
+    {
+        int.TryParse(pageQuery, out currentPage);
+        if (currentPage < 1) currentPage = 1;
+    }
+}
+<form method="post" asp-page-handler="Search">
+    <input style="float: left" type="text" asp-for="Search">
+    <input type="submit" value="Search">
+</form>
 <h1>Users</h1>
 @if(Model.Users.Any()) {
     <ul>
@@ -13,4 +25,14 @@
             </li>
         }
     </ul>
+    @if (currentPage > 1) {
+    <a href="/users/?pageNum=@(currentPage - 1)&search=@Request.Query["search"]">Prev</a>
+    }
+    <span>Page @currentPage</span>
+    <a href="/users/?pageNum=@(currentPage + 1)&search=@Request.Query["search"]">Next</a>
+
+} else if (currentPage > 1)
+{
+    <a href="/users/?pageNum=@(currentPage - 1)&search=@Request.Query["search"]">Prev</a>
+    <span>Page @currentPage</span>
 }

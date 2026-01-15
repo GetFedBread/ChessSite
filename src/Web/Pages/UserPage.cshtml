@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Home page";
 }
+<a href="/users"><button>Users</button></a>
 @if(Model.UserInfo != null) {
     <h1>@Model.Username</h1>
     @if(User.Identity != null && User.Identity.IsAuthenticated) {
