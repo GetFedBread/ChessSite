@@ -13,7 +13,14 @@ string? connectionString = builder.Configuration.GetConnectionString("DefaultCon
 builder.Services.AddDbContext<ChessDbContext>(options =>
     options.UseSqlite(connectionString, b => b.MigrationsAssembly("Infrastructure")));
 
-builder.Services.AddDefaultIdentity<User>().AddEntityFrameworkStores<ChessDbContext>();
+builder.Services.AddDefaultIdentity<User>(options =>
+    {
+        options.User.RequireUniqueEmail = true;
+        options.User.AllowedUserNameCharacters =
+            "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-.:;_@+ æøåÆØÅäöüÄÖÜßéèêÉÈÊ";
+    })
+    .AddEntityFrameworkStores<ChessDbContext>();
+
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 builder.Services.AddRazorPages();
