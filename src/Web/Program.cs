@@ -14,6 +14,7 @@ builder.Services.AddDbContext<ChessDbContext>(options =>
     options.UseSqlite(connectionString, b => b.MigrationsAssembly("Infrastructure")));
 
 builder.Services.AddDefaultIdentity<User>().AddEntityFrameworkStores<ChessDbContext>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 builder.Services.AddRazorPages();
 

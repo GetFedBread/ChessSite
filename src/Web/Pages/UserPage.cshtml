@@ -1,0 +1,20 @@
+@page "/users/{user}"
+@model UserPageModel
+@{
+    ViewData["Title"] = "Home page";
+}
+@if(Model.UserInfo != null) {
+    <h1>@Model.Username</h1>
+
+    <hr/>
+
+    <h2>Games</h2>
+
+    @if(Model.UserInfo.Games!.Any()) {
+
+    } else {
+        <p>This user has no games</p>
+    }
+} else {
+    <p>User '@Model.Username' does not exist</p>
+}
