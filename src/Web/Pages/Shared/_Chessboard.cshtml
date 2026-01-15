@@ -15,7 +15,11 @@
             var color = (row+column) % 2 == 1 ? "b" : "w";
             // converts column to letters, starting from a(97)
             var id = ""+(char)(boardColumn+97)+boardRow;
+<<<<<<< Updated upstream
             <th class = "@color" id="@id"></th>
+=======
+            <th class = "@color" id="@id" onclick="tile_clicked('@id')"></th>
+>>>>>>> Stashed changes
         }
         </tr>
     }
@@ -45,4 +49,9 @@
         </tr>
     }
     
+<<<<<<< Updated upstream
 </table>
+=======
+</table>
+<script src="~/Pages/Shared/_Chessboard.cshtml.js"></script>
+>>>>>>> Stashed changes
