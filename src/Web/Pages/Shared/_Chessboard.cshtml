@@ -1,5 +1,6 @@
 @model ChessboardViewModel
-
+<input style="float: left" type="text" id="BoardPosition">
+<input type="submit" value="Load" onclick="load_from_input()">
 <table id = "Chessboard">
     @for(int row = 0; row < 8; row++) {
         // Used to flip the board when viewing from blacks perspective
@@ -47,6 +48,7 @@
     
 </table>
 
-<p id="TurnDisplay"></p>
+<p id="TurnDisplay"></p> 
+<p id="BoardStateDisplay"></p>
 
 <script src="~/Pages/Shared/_Chessboard.cshtml.js"></script>

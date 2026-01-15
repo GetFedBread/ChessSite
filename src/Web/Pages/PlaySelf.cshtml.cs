@@ -8,7 +8,7 @@ public class PlaySelfModel : PageModel
 
     public required bool ViewingFromWhite { get; set; }
 
-    public async Task<IActionResult> OnGet()
+    public IActionResult OnGet()
     {
         string? from = HttpContext.Request.Query["fromWhite"];
         ViewingFromWhite = from != "false";
