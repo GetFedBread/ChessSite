@@ -2,11 +2,8 @@
 using Core;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
 
 // Setup the database
 string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -16,12 +13,13 @@ builder.Services.AddDbContext<ChessDbContext>(options =>
 builder.Services.AddDefaultIdentity<User>(options =>
     {
         options.User.RequireUniqueEmail = true;
-        options.User.AllowedUserNameCharacters =
+        options.User.AllowedUserNameCharacters = 
             "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-.:;_@+ æøåÆØÅäöüÄÖÜßéèêÉÈÊ";
     })
     .AddEntityFrameworkStores<ChessDbContext>();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IGameRepository, GameRepository>();
 
 builder.Services.AddRazorPages();
 

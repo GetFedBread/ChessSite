@@ -1,0 +1,11 @@
+@page "/play/self"
+@model PlaySelfModel
+@{
+    ViewData["Title"] = "Home page";
+}
+@using Web.Pages
+@await Html.PartialAsync("_Chessboard",
+    new ChessboardViewModel
+    {
+        ViewingFromWhite = Model.ViewingFromWhite
+    })

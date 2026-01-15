@@ -1,0 +1,6 @@
+@page "/play"
+
+<a href="play/self"><button>Play self</button></a>
+@if(User.Identity != null && User.Identity.IsAuthenticated) {
+    <p>Hey, you're logged in. How about that?</p>
+}

@@ -3,10 +3,6 @@
 @{
     ViewData["Title"] = "Home page";
 }
-@using Web.Pages
-@await Html.PartialAsync("_Chessboard",
-    new ChessboardViewModel
-    {
-        ViewingFromWhite = Model.ViewingFromWhite
-    })
 
+<a href="/play"><button>Play</button></a>
+<a href="/users"><button>Users</button></a>

@@ -5,6 +5,15 @@
 }
 @if(Model.UserInfo != null) {
     <h1>@Model.Username</h1>
+    @if(User.Identity != null && User.Identity.IsAuthenticated) {
+        @if(User.Identity.Name == Model.Username) {
+            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
+                <button>Manage account</button>
+            </a>
+        } else {
+            <button>Send friend request</button>
+        }
+    }
 
     <hr/>
 

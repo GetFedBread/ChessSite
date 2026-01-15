@@ -4,23 +4,14 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Web.Pages;
 
-public class UserPageModel : PageModel
+public class UserPageModel(IUserRepository userRepo) : PageModel
 {
-
-    readonly IUserRepository _userRepo;
-    public required bool ViewingFromWhite { get; set; }
+    readonly IUserRepository _userRepo = userRepo;
     public required string Username {get; set;}
     public UserDTO? UserInfo {get; set;}
 
-    public UserPageModel(IUserRepository userRepo)
-    {
-        _userRepo = userRepo;
-    }
-
     public async Task<IActionResult> OnGet(string user)
     {
-        string? from = HttpContext.Request.Query["fromWhite"];
-        ViewingFromWhite = from != "false";
         Username = user;
         UserInfo = await _userRepo.GetUserByName(user);
         return Page();

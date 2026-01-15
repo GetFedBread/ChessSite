@@ -1,0 +1,16 @@
+@page "/users"
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
+@model UsersModel
+
+<h1>Users</h1>
+@if(Model.Users.Any()) {
+    <ul>
+        @foreach(var user in Model.Users) {
+            <li>
+                <p>
+                    <a href="/users/@user.Username">@user.Username</a>
+                </p>
+            </li>
+        }
+    </ul>
+}

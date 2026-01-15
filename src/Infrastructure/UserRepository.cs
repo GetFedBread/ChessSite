@@ -3,6 +3,7 @@ namespace Infrastructure;
 using Core;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
 public class UserRepository : IUserRepository
 {
@@ -44,5 +45,19 @@ public class UserRepository : IUserRepository
 
             }).ToList()
         };
+    }
+
+    public async Task<List<UserDTO>> GetUsers(int count, int offset, string? search)
+    {
+        var query = from user in _dbContext.Users
+            where user.UserName.Contains(search ?? "")
+            orderby user.UserName descending
+                select new UserDTO
+                {
+                    Username = user.UserName
+
+                };
+
+        return await query.Skip(offset).Take(count).ToListAsync();
     }
 }

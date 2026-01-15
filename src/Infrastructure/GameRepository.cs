@@ -1,6 +1,6 @@
 namespace Infrastructure;
 
-public class GameRepository
+public class GameRepository : IGameRepository
 {
     
 }
