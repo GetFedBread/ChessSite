@@ -100,6 +100,7 @@ function tile_clicked(tile) {
     TO-DO:
      - Detect check and mate
      - Castling
+     - Promotion
 */
 function move(from, to) {
     if(from == null || to == null) {
@@ -181,6 +182,18 @@ function get_moves(tile_id) {
     let is_white = white.has(piece_letter);
     
     let tiles = new Set();
+    let add_tile = (tile, allow_empty, allow_occupied) => {
+        let column = tile.charCodeAt(0) - 96;
+        let row = parseInt(tile.at(1));
+        if(column >= 1 && column <= 8 && row >= 1 && row <= 8) {
+            let tile_letter = piece2letter.get(document.getElementById(tile).innerHTML);
+            if(allow_empty && tile_letter == "" || allow_occupied && white.has(tile_letter) != is_white && tile_letter != "")  {
+                tiles.add(tile);
+                return true;
+            }
+        }
+        return false;
+    }
 
     switch(piece_letter.toLowerCase()) {
         case "p":
@@ -188,14 +201,7 @@ function get_moves(tile_id) {
                 let column = tile_column;
                 let row = tile_row + i * (is_white ? 1 : -1);
                 let id = String.fromCharCode(96 + column)+row;
-                if(column >= 1 && column <= 8 && row >= 1 && row <= 8) {
-                    let tile_letter = piece2letter.get(document.getElementById(id).innerHTML);
-                    if(tile_letter == "")  {
-                        tiles.add(id);
-                    } else {
-                        break;
-                    }
-                } else {
+                if(!add_tile(id, true, false)) {
                     break;
                 }
                 if(is_white && row > 3 || !is_white && row < 6) {
@@ -204,14 +210,9 @@ function get_moves(tile_id) {
             }
             for(i = -1; i <= 1; i += 2) {
                 let column = tile_column + i;
-                let row = tile_row + 1;
+                let row = tile_row + (is_white ? 1 : -1);
                 let id = String.fromCharCode(96 + column)+row;
-                if(column >= 1 && column <= 8 && row >= 1 && row <= 8) {
-                    let tile_letter = piece2letter.get(document.getElementById(id).innerHTML);
-                    if(tile_letter != "" && white.has(tile_letter) != is_white)  {
-                        tiles.add(id);
-                    }
-                }
+                add_tile(id, false, true);
             }
             
         break;
@@ -224,23 +225,13 @@ function get_moves(tile_id) {
 
                     let column = column_offset * 2 + tile_column;
                     let row = row_offset * 1 + tile_row;
-                    if(column >= 1 && column <= 8 && row >= 1 && row <= 8) {
-                        let id = String.fromCharCode(96 + column)+row;
-                        let tile_letter = piece2letter.get(document.getElementById(id).innerHTML);
-                        if(tile_letter == "" || white.has(tile_letter) != is_white)  {
-                            tiles.add(id);
-                        }
-                    }
+                    let id = String.fromCharCode(96 + column)+row;
+                    add_tile(id, true, true);
 
                     column = column_offset * 1 + tile_column;
                     row = row_offset * 2 + tile_row;
-                    if(column >= 1 && column <= 8 && row >= 1 && row <= 8) {
-                        let id = String.fromCharCode(96 + column)+row;
-                        let tile_letter = piece2letter.get(document.getElementById(id).innerHTML);
-                        if(tile_letter == "" || white.has(tile_letter) != is_white)  {
-                            tiles.add(id);
-                        }
-                    }
+                    id = String.fromCharCode(96 + column)+row;
+                    add_tile(id, true, true);
                 }
             }
         break;
@@ -298,16 +289,13 @@ function get_moves(tile_id) {
                     let column = tile_column + i;
                     let row = tile_row + j;
                     let id = String.fromCharCode(96 + column)+row;
-                    if(column >= 1 && column <= 8 && row >= 1 && row <= 8) {
-                        let tile_letter = piece2letter.get(document.getElementById(id).innerHTML);
-                        if(tile_letter == "" || white.has(tile_letter) != is_white)  {
-                            tiles.add(id);
-                        }
-                    }
+                    add_tile(id, true, true);
                 }
             }
         break;
     }
+
+    console.log(tiles);
     return tiles;
 }
 
@@ -347,4 +335,3 @@ function generate_board_state() {
     state += " "+turn+" "+castling+" - 0 1";
     return state;
 }
-
