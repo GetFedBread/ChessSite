@@ -184,7 +184,7 @@ function get_moves(tile_id) {
     let tiles = new Set();
     let add_tile = (tile, allow_empty, allow_occupied) => {
         let column = tile.charCodeAt(0) - 96;
-        let row = parseInt(tile.at(1));
+        let row = parseInt(tile.substring(1));
         if(column >= 1 && column <= 8 && row >= 1 && row <= 8) {
             let tile_letter = piece2letter.get(document.getElementById(tile).innerHTML);
             if(allow_empty && tile_letter == "" || allow_occupied && white.has(tile_letter) != is_white && tile_letter != "")  {
