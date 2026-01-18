@@ -1,0 +1,31 @@
+@page "/games/{gameId}"
+@using Humanizer
+@using System.Text.Json
+@model GamePageModel
+@{
+    ViewData["Title"] = "Home page";
+}
+@using Web.Pages;
+@if(Model.Game != null) {
+    var white = Model.Game.White!.Username;
+    var black = Model.Game.Black!.Username;
+    <h1>
+        <a href="/users/@white">@white</a> v 
+        <a href="/users/@black">@black</a>
+    </h1>
+    <strong>@Model.Game.StartDate.ToLocalTime().ToOrdinalWords()</strong>
+    @await Html.PartialAsync("_Chessboard",
+    new ChessboardViewModel
+    {
+        ViewingFromWhite = Model.ViewingFromWhite
+    })
+
+    <script>
+        window.addEventListener("load", function () {
+            load_position(@Html.Raw(JsonSerializer.Serialize(Model.Game.StartingPosition)));
+            do_moves(@Html.Raw(JsonSerializer.Serialize(Model.Game.Moves)));
+        });
+    </script>
+} else {
+    <p1>Game not found</p1>
+}

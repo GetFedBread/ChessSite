@@ -18,16 +18,12 @@ const piece2letter = new Map([
     ["", ""]
 ]);
 const white = new Set(["P", "N", "B", "R", "Q", "K"]);
-
 let turn = "w";
 let starting_position = null;
 let castling_rights = new Set();
 let moves = [];
-// This forces all chessboards to do the standard setup when loaded.
-// This might not always be desired. 
-load_postition(starting_position);
 
-function load_postition(position) {
+function load_position(position) {
     if(position == null) {
         position = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
     }
@@ -66,6 +62,12 @@ function load_postition(position) {
     document.getElementById("MoveDisplay").innerHTML = "";
     document.getElementById("TurnDisplay").innerHTML = turn;
     document.getElementById("BoardStateDisplay").innerHTML = position;
+}
+
+function do_moves(new_moves) {
+    new_moves.forEach(new_move => {
+        move(new_move.slice(0, 2), new_move.slice(2, 4));
+    });
 }
 
 function clear_board() {
@@ -141,11 +143,7 @@ function move(from, to) {
     document.getElementById("TurnDisplay").innerHTML = turn;
     document.getElementById("BoardStateDisplay").innerHTML = generate_board_state();
     
-    let moves_display = document.getElementById("MoveDisplay");
-    moves_display.innerHTML = "";
-    moves.forEach(move => {
-        moves_display.innerHTML += "\n<p>"+move+"</p>";
-    });
+    document.getElementById("MoveDisplay").innerHTML += "\n<p>"+from+to+"</p>";
 }
 
 function get_moves(tile_id) {

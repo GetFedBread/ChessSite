@@ -1,4 +1,5 @@
 @page "/users/{user}"
+@using Humanizer
 @model UserPageModel
 @{
     ViewData["Title"] = "Home page";
@@ -21,7 +22,13 @@
     <h2>Games</h2>
 
     @if(Model.UserInfo.Games!.Any()) {
-
+        foreach(var game in Model.UserInfo.Games!) {
+            <strong>
+                <a href = "/games/@game.GameId">
+                    @game.White!.Username v @game.Black!.Username (@game.StartDate.ToLocalTime().ToOrdinalWords())
+                </a>
+            </strong>
+        }
     } else {
         <p>This user has no games</p>
     }

@@ -17,10 +17,13 @@ public class UserRepository : IUserRepository
     public async Task<UserDTO?> GetUserByName(string username)
     {
         var query = from user in _dbContext.Users
-                .Include(a => a.GamesAsBlack)
-                .Include(a => a.GamesAsWhite)
-                    where user.UserName == username
-                    select user;
+            .Include(u => u.GamesAsWhite)
+                .ThenInclude(g => g.Black)
+            .Include(u => u.GamesAsBlack)
+                .ThenInclude(g => g.White)
+                
+            where user.UserName == username
+            select user;
 
         var result = await query.FirstOrDefaultAsync();
         if (result == null) return null;
@@ -34,6 +37,8 @@ public class UserRepository : IUserRepository
                 StartingPosition = g.StartingPosition,
                 Moves = g.Moves,
                 GameId = g.GameId,
+                Active = g.Active,
+                StartDate = g.StartDate,
                 Black = new UserDTO
                 {
                     Username = g.Black == null ? "Deleted" : g.Black.UserName
