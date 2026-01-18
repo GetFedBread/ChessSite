@@ -52,6 +52,16 @@ th.w {
   background-color:beige;
 }
 
+th.moveable {
+  outline: 4px solid green;
+  cursor: pointer;
+}
+
+th.selected {
+  outline: 4px solid gold;
+}
+
+
 a {
   color: black;
   text-decoration: none;

@@ -83,18 +83,34 @@ let last_tile = null;
 let legal_moves = null;
 function tile_clicked(tile) {
     if(last_tile == null) {
+        if((turn == "w") != white.has(piece2letter.get(document.getElementById(tile).innerHTML))) {
+            return;
+        }
         let moves = get_moves(tile);
         if(moves.size > 0) {
             last_tile = tile;
             legal_moves = moves;
+            document.getElementById(tile).classList.add("selected");
+            moves.forEach(m => {
+                document.getElementById(m).classList.add("moveable");
+            })
         }
     } else if(tile != last_tile && legal_moves.has(tile)) {
         move(last_tile, tile);
+        document.getElementById(last_tile).classList.remove("selected");
+        legal_moves.forEach(m => {
+            document.getElementById(m).classList.remove("moveable");
+        })
         last_tile = null;
         legal_moves = null;
     } else {
+        document.getElementById(last_tile).classList.remove("selected");
+        legal_moves.forEach(m => {
+            document.getElementById(m).classList.remove("moveable");
+        })
         last_tile = null;
         legal_moves = null;
+        tile_clicked(tile);
     }
 }
 
