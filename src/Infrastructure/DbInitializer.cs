@@ -26,7 +26,7 @@ public class DbInitializer
                 "b8c6",
                 "f1c4",
                 "g8f6",
-                "h5f7"
+                "h5f7#"
             ]
         };
 

@@ -107,7 +107,7 @@ function tile_clicked(tile) {
         legal_moves.forEach(m => {
             document.getElementById(m).classList.remove("moveable");
         })
-        var same_tile = tile != last_tile;
+        let same_tile = tile != last_tile;
         last_tile = null;
         legal_moves = null;
         if(same_tile) {
@@ -155,13 +155,21 @@ function move(from, to) {
     
     document.getElementById(to).innerHTML = piece;
     document.getElementById(from).innerHTML = "";
-    moves.push(from+to);
 
     turn = turn == "w" ? "b" : "w";
     document.getElementById("TurnDisplay").innerHTML = turn;
     document.getElementById("BoardStateDisplay").innerHTML = generate_board_state();
-    
-    document.getElementById("MoveDisplay").innerHTML += "\n<p>"+from+to+"</p>";
+    let move_notation = from+to;
+    if(is_mate(turn == "w")) {
+        move_notation += "#";
+        alert(turn == "w" ? "Black wins" : "White wins");
+    } else if(is_stalemate(turn == "w")) {
+        alert("Stalemate!");
+    } else if(is_check(turn == "w")) {
+        move_notation += "+";
+    }
+    moves.push(move_notation);
+    document.getElementById("MoveDisplay").innerHTML += "\n<p>"+move_notation+"</p>";
 }
 
 function get_moves(tile_id, capture_only = false, allow_checked = false, simulated_moves) {
@@ -359,8 +367,8 @@ function is_check(white_checked, simulated_moves) {
     for(let row = 8; row >= 1; row--) {
         for(let column = 1; column <= 8; column++) {
             let id = String.fromCharCode(96 + column)+row;
-            var possible_moves = get_moves(id, true, true, simulated_moves);
-            var check_found = false;
+            let possible_moves = get_moves(id, true, true, simulated_moves);
+            let check_found = false;
             possible_moves.forEach(m => {
                 let capture_letter = "";
                 if(move_map.has(m)) {
@@ -379,6 +387,25 @@ function is_check(white_checked, simulated_moves) {
         }
     }
     return false;
+}
+
+function is_stalemate(white_stale) {
+    for(let row = 8; row >= 1; row--) {
+        for(let column = 1; column <= 8; column++) {
+            let id = String.fromCharCode(96 + column)+row;
+            let piece_letter = piece2letter.get(document.getElementById(id).innerHTML);
+            if(white_stale != white.has(piece_letter) || piece_letter == "") {
+                continue;
+            }
+            if(get_moves(id).size > 0) return false;
+
+        }
+    }
+    return true;
+}
+
+function is_mate(white_mated) {
+    return is_check(white_mated) && is_stalemate(white_mated);
 }
 
 function generate_board_state() {
