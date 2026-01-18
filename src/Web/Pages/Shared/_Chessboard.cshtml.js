@@ -108,9 +108,12 @@ function tile_clicked(tile) {
         legal_moves.forEach(m => {
             document.getElementById(m).classList.remove("moveable");
         })
+        var same_tile = tile != last_tile;
         last_tile = null;
         legal_moves = null;
-        tile_clicked(tile);
+        if(same_tile) {
+            tile_clicked(tile);
+        }
     }
 }
 
