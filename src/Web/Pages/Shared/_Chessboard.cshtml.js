@@ -43,7 +43,6 @@ function load_position(position) {
             }
             continue;
         }
-        //console.log("Piece "+c+" on "+id);
         document.getElementById(id).innerHTML = letter2piece.get(c);
         column += 1;
         if(column >= 8) {
@@ -119,7 +118,7 @@ function tile_clicked(tile) {
 
 /*
     TO-DO:
-     - Detect check and mate
+     - Detect mate
      - Castling
      - Promotion
 */
@@ -165,48 +164,78 @@ function move(from, to) {
     document.getElementById("MoveDisplay").innerHTML += "\n<p>"+from+to+"</p>";
 }
 
-function get_moves(tile_id) {
+function get_moves(tile_id, capture_only = false, allow_checked = false, simulated_moves) {
     // function to generate moves that go in a straight line
     let repeat_move = (tile, move, is_white) => {
-    let column = tile.charCodeAt(0) - 96;
-    let row = parseInt(tile.at(1));
-    column += move[0];
-    row += move[1];
-
-    let tiles = new Set();
-
-    while(column >= 1 && column <= 8 && row >= 1 && row <= 8) {
-        let id = String.fromCharCode(96 + column)+row;
-        let tile_letter = piece2letter.get(document.getElementById(id).innerHTML);
-
-        if(tile_letter != "")  {
-            if(white.has(tile_letter) != is_white) {
-                tiles.add(id);
-            }
-            break;
-        }
-
-        tiles.add(id);
+        let column = tile.charCodeAt(0) - 96;
+        let row = parseInt(tile.at(1));
         column += move[0];
         row += move[1];
+
+        let tiles = new Set();
+
+        while(column >= 1 && column <= 8 && row >= 1 && row <= 8) {
+            let id = String.fromCharCode(96 + column)+row;
+
+            add_tile(id, true, true);
+            let tile_letter = "";
+            if(move_map.has(id)) {
+                tile_letter = piece2letter.get(move_map.get(id));
+            } else {
+                tile_letter = piece2letter.get(document.getElementById(id).innerHTML);
+            }
+            if(tile_letter != "")  {
+                break;
+            }
+
+            column += move[0];
+            row += move[1];
+        }
+
+        return tiles;
     }
 
-    return tiles;
+    let move_map = new Map();
+    if(simulated_moves != null) {
+        simulated_moves.forEach(m => {
+            let from = m.slice(0, 2);
+            let to = m.slice(2, 4);
+            move_map.set(to, document.getElementById(from).innerHTML);
+            move_map.set(from, "");
+        });
     }
-    let piece_letter = piece2letter.get(document.getElementById(tile_id).innerHTML);
+    let piece_letter = "";
+    if(move_map.has(tile_id)) {
+        piece_letter = piece2letter.get(move_map.get(tile_id));
+    } else {
+        piece_letter = piece2letter.get(document.getElementById(tile_id).innerHTML);
+    }
     let tile_column = tile_id.charCodeAt(0) - 96;
     let tile_row = parseInt(tile_id.at(1));
     let is_white = white.has(piece_letter);
     
     let tiles = new Set();
+    // Function for adding moves to the tiles set.
+    // Used to block certain tiles from being added.
     let add_tile = (tile, allow_empty, allow_occupied) => {
+        if(capture_only) allow_empty = false;
         let column = tile.charCodeAt(0) - 96;
         let row = parseInt(tile.substring(1));
         if(column >= 1 && column <= 8 && row >= 1 && row <= 8) {
-            let tile_letter = piece2letter.get(document.getElementById(tile).innerHTML);
+
+            let tile_letter = "";
+            if(move_map.has(tile)) {
+                tile_letter = piece2letter.get(move_map.get(tile));
+            } else {
+                tile_letter = piece2letter.get(document.getElementById(tile).innerHTML);
+            }
+
             if(allow_empty && tile_letter == "" || allow_occupied && white.has(tile_letter) != is_white && tile_letter != "")  {
-                tiles.add(tile);
-                return true;
+                if(allow_checked || !is_check(white.has(piece_letter), [tile_id+tile])) {
+                    tiles.add(tile);
+                    return true;
+                }
+                return false;
             }
         }
         return false;
@@ -312,8 +341,44 @@ function get_moves(tile_id) {
         break;
     }
 
-    console.log(tiles);
+    //console.log(tiles);
     return tiles;
+}
+
+function is_check(white_checked, simulated_moves) {
+    var move_map = new Map();
+    if(simulated_moves != null) {
+        simulated_moves.forEach(m => {
+            let from = m.slice(0, 2);
+            let to = m.slice(2, 4);
+            move_map.set(to, document.getElementById(from).innerHTML);
+            move_map.set(from, "");
+        });
+    }
+
+    for(let row = 8; row >= 1; row--) {
+        for(let column = 1; column <= 8; column++) {
+            let id = String.fromCharCode(96 + column)+row;
+            var possible_moves = get_moves(id, true, true, simulated_moves);
+            var check_found = false;
+            possible_moves.forEach(m => {
+                let capture_letter = "";
+                if(move_map.has(m)) {
+                    capture_letter = piece2letter.get(move_map.get(m));
+                } else {
+                    capture_letter = piece2letter.get(document.getElementById(m).innerHTML);
+                }
+                if(white_checked == white.has(capture_letter) && capture_letter.toLowerCase() == "k") {
+                    check_found = true;
+                    return;
+                }
+            });
+            if(check_found) {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 function generate_board_state() {
